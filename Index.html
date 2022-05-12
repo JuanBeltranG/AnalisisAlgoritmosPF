@@ -10,11 +10,23 @@
 </head>
 <body>
 
-    
-    <div id="theory"></div>
-    <div id="cy"></div>
-    <script src='code.js'></script>
 
-    <input type="text" placeholder="Introduce un texto">
+
+    <!--<div id="theory"></div>
+    <div id="cy"></div>
+    <script src='code.js'></script>-->
+
+    <div class="container">
+        <div class="left">
+            <form>
+                <input type="text" placeholder="introduce el texo" id="texto">
+                <button type ="button" onclick="cuentaOcurrencias()">Generar arbol</button>
+                <input type="text" id="ocurrencias">
+            </form>
+        </div>
+        <div class="right" id="cy"></div>
+        <script src='code.js'></script>
+    </div>
+
 </body>
 </html>
