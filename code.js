@@ -1,5 +1,25 @@
-class TreeNode{
-  constructor(){
+class Stack {
+  constructor() {
+    this.items = [];
+  }
+
+  push(element) {
+    this.items.push(element);
+  }
+
+  pop() {
+    if (this.items.length == 0)
+      return "Underflow";
+    return this.items.pop();
+  }
+
+  isEmpty() {
+    return this.items.length == 0;
+  }
+}
+
+class TreeNode {
+  constructor() {
     this.key = null;
     this.val = null;
     this.left = null;
@@ -93,6 +113,8 @@ class MinHeap {
 // Variables Globales
 
 var cy;
+var st;
+var st2;
 var layout;
 var min_heap;
 let options = {
@@ -113,18 +135,32 @@ let options = {
   animate: true, // whether to transition the node positions
   animationDuration: 500, // duration of animation in ms if enabled
   animationEasing: undefined, // easing of animation if enabled,
-  animateFilter: function ( node, i ){ return true; }, // a function that determines whether the node should be animated.  All nodes animated by default on animate enabled.  Non-animated nodes are positioned immediately when the layout starts
+  animateFilter: function (node, i) { return true; }, // a function that determines whether the node should be animated.  All nodes animated by default on animate enabled.  Non-animated nodes are positioned immediately when the layout starts
   ready: undefined, // callback on layoutready
   stop: undefined, // callback on layoutstop
-  transform: function (node, position ){ return position; } // transform a given node position. Useful for changing flow direction in discrete layouts
+  transform: function (node, position) { return position; } // transform a given node position. Useful for changing flow direction in discrete layouts
 };
 
 // Fin de variables globales
 
 // Cosas Kevin
 
-function nextMove(){
-  if(min_heap.heap.length > 2){
+function nextMove() {
+  if(!st2.isEmpty()){
+
+    var restore_data = st2.pop();
+    restore_data.restore();
+    for(var i = 0; i < restore_data.length; i++){
+      if(restore_data[i].isNode()){
+        st.push(restore_data[i].id());
+      }
+    }
+
+    return;
+  }
+
+
+  if (min_heap.heap.length > 2) {
     var current_node = new TreeNode();
     current_node.left = min_heap.remove();
     current_node.right = min_heap.remove();
@@ -152,11 +188,20 @@ function nextMove(){
         target: current_node.right.key + "/" + current_node.right.val
       }
     });
-    
+
     layout.stop();
-    layout = cy.layout( options );
+    layout = cy.layout(options);
+    st.push(current_node.key + "/" + current_node.val);
     layout.run();
 
+  }
+}
+
+function backMove(){
+  if(!st.isEmpty()){
+    var node_to_delete = cy.$id(st.pop());
+    
+    st2.push(cy.remove(node_to_delete.union(node_to_delete.connectedEdges())));
   }
 }
 
@@ -218,11 +263,13 @@ function generaArbol() {
 
   // Cosas Kevin
 
-  layout = cy.layout( options );
+  layout = cy.layout(options);
+  st = new Stack();
+  st2 = new Stack();
 
   min_heap = new MinHeap();
 
-  for (let [key, value] of ocurrencias){
+  for (let [key, value] of ocurrencias) {
     var aux_mode = new TreeNode();
     aux_mode.key = key;
     aux_mode.val = value;
@@ -233,7 +280,8 @@ function generaArbol() {
     });
 
     layout.stop();
-    layout = cy.layout( options );
+    layout = cy.layout(options);
+    st.push(key + "/" + value);
     layout.run();
 
   }
