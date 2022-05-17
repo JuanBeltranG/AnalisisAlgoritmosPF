@@ -1,34 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Algoritmo de Huffman</title>
-    <script src='cytoscape.js'></script>
-    <link rel="stylesheet" href="Style.css">
+  <meta charset="UTF-8">
+  <title>Algoritmo de Huffman</title>
+  <script src='cytoscape.js'></script>
+
+  <link rel="stylesheet" href="./bootstrap.css">
+  <link rel="stylesheet" href="./style.css">
+
 </head>
 <body>
+<!-- partial:index.partial.html -->
+<div id="main">
+  <div id="left" class="external">
 
+    <center><h3>Algoritmo de Huffman</h3></center>
+    
+    <form>
+      <input type="text" placeholder="Introduce el texo" id="texto" style="width: 100%;">
+      <br/><br/>
+      <button type ="button" onclick="generaArbol()" class="btn btn-dark" style="width: 100%;">Generar arbol</button>
+      <br/><br/>
+      
+      <div class="btn-group" role="group" aria-label="Basic outlined example" style="width: 100%;">
+        <button type="button" onclick="backMove()" class="btn btn-outline-dark">Paso anterior</button>
+        <button type="button" onclick="nextMove()" class="btn btn-outline-dark">Siguiente paso</button>
+      </div>
 
+  </form>
+  </div>
 
-    <!--<div id="theory"></div>
-    <div id="cy"></div>
-    <script src='code.js'></script>-->
+  <div id="right" class="external">
 
-    <div class="container">
-        <div class="left">
-            <form>
-                <input type="text" placeholder="introduce el texo" id="texto">
-                <button type ="button" onclick="generaArbol()">Generar arbol</button>
-                <button type="button" onclick="backMove()">Paso anterior</button>
-                <button type="button" onclick="nextMove()">Siguiente paso</button>
-                <input type="text" id="ocurrencias">
-            </form>
-        </div>
-        <div class="right" id="cy"></div>
-        <script src='code.js'></script>
-    </div>
+    <div class="right" id="cy"></div>
+    <script src='code.js'></script>
 
+  </div>
+</div>
+<!-- partial -->
+  
 </body>
 </html>
