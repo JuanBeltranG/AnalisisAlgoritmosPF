@@ -171,27 +171,27 @@ function nextMove() {
     min_heap.insert(current_node);
 
     cy.add({
-      data: { id: current_node.key + "/" + current_node.val }
+      data: { id: current_node.val + "/" + current_node.key}
     });
 
     cy.add({
       data: {
         id: current_node.key + current_node.left.key,
-        source: current_node.key + "/" + current_node.val,
-        target: current_node.left.key + "/" + current_node.left.val
+        source: current_node.val + "/" + current_node.key,
+        target: current_node.left.val + "/" + current_node.left.key
       }
     });
     cy.add({
       data: {
         id: current_node.key + current_node.right.key,
-        source: current_node.key + "/" + current_node.val,
-        target: current_node.right.key + "/" + current_node.right.val
+        source: current_node.val + "/" + current_node.key,
+        target: current_node.right.val + "/" + current_node.right.key
       }
     });
 
     layout.stop();
     layout = cy.layout(options);
-    st.push(current_node.key + "/" + current_node.val);
+    st.push(current_node.val + "/" + current_node.key);
     layout.run();
 
   }
@@ -263,6 +263,10 @@ function generaArbol() {
 
   // Cosas Kevin
 
+
+  ocurrencias = new Map([...ocurrencias.entries()].sort((a, b) => a[1] - b[1]));
+  console.log(ocurrencias);
+
   layout = cy.layout(options);
   st = new Stack();
   st2 = new Stack();
@@ -276,7 +280,7 @@ function generaArbol() {
     min_heap.insert(aux_mode);
 
     cy.add({
-      data: { id: key + "/" + value }
+      data: { id: value + "/" + key }
     });
 
     layout.stop();
