@@ -398,6 +398,10 @@ function generaArbol() {
   ocurrencias = new Map([...ocurrencias.entries()].sort((a, b) => a[1] - b[1]));
   console.log(ocurrencias);
 
+
+  ocurrencias = new Map([...ocurrencias.entries()].sort((a, b) => a[1] - b[1]));
+  console.log(ocurrencias);
+
   layout = cy.layout(options);
   st = new Stack();
   st2 = new Stack();
