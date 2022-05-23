@@ -12,32 +12,52 @@
 <body>
 <!-- partial:index.partial.html -->
 <div id="main">
-  <div id="left" class="external">
+
+  <!--Div del lado izquierdo donde se encuentra el menu-->
+  <div id="left" class="external ">
 
     <center><h3>Algoritmo de Huffman</h3></center>
     
+  
     <form>
       <input type="text" placeholder="Introduce el texo" id="texto" style="width: 100%;">
-      <br/><br/>
+      <br/>
       <button type ="button" onclick="generaArbol()" class="btn btn-dark" style="width: 100%;">Generar arbol</button>
-      <br/><br/>
+      <br/>
       
       <div class="btn-group" role="group" aria-label="Basic outlined example" style="width: 100%;">
         <button type="button" onclick="backMove()" class="btn btn-outline-dark">Paso anterior</button>
         <button type="button" onclick="nextMove()" class="btn btn-outline-dark">Siguiente paso</button>
       </div>
 
-  </form>
+    </form>
+
+    <!--Parrafo donde escribiremos los bits de la cadena original -->
+
+  <br/>
+
+  <strong><p id="originalTextTitle"></p></strong>
+  <p id="originalText"></p>
+
+  <strong><p id="compressedTitle"></p></strong>
+  <span id="compresedText"> </span>
+
+  <strong><p id="finalTextTitle"></p></strong>
+  <p id="finalText"></p>
+
+
+
   </div>
 
+  <!--Div donde se muestra la animacion-->
   <div id="right" class="external">
-
     <div class="right" id="cy"></div>
     <script src='code.js'></script>
-
   </div>
+
+
 </div>
-<!-- partial -->
+
   
 </body>
 </html>

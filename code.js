@@ -1,3 +1,4 @@
+// Implementacion de stack 
 class Stack {
   constructor() {
     this.items = [];
@@ -17,7 +18,9 @@ class Stack {
     return this.items.length == 0;
   }
 }
+//Fin de la implementacion del stack
 
+//Nodo para generar el arbol binario
 class TreeNode {
   constructor() {
     this.key = null;
@@ -26,6 +29,37 @@ class TreeNode {
     this.right = null;
   }
 }
+
+//Funcion para obtener el texto comprimido utilizando los codigos de huffman
+
+function getCommpresedText(text){
+
+  var commpresedText = '';
+
+  for (var i = 0; i < text.length; i++) {
+    currChar = text.charAt(i);
+    commpresedText += huuffmanMap.get(currChar);
+    commpresedText += ' ';
+  }
+
+  //var finalCompText = '';
+
+  /*for(var i = 0; i < commpresedText.length; i++){
+
+    currChar = commpresedText.charAt(i);
+
+    if(i % 8 == 0){
+      finalCompText += ' ';
+      i--;
+    }else{
+      finalCompText += currChar;    
+    }
+  }*/
+
+  return commpresedText;
+
+}
+
 
 class MinHeap {
 
@@ -40,12 +74,10 @@ class MinHeap {
   }
 
   insert(node) {
-
     // Inserta un nuevo nodo al final del array
     this.heap.push(node)
 
     // Encontramos la posicion correcta para el nuevo nodo
-
     if (this.heap.length > 1) {
       let current = this.heap.length - 1
 
@@ -99,27 +131,92 @@ class MinHeap {
     }
 
     // Si solo hay dos elemntos en el array simplemente sacamos el primero del array
-
     else if (this.heap.length === 2) {
       this.heap.splice(1, 1)
     } else {
       return null
     }
-
     return smallest
   }
 }
 
-// Variables Globales
+//Imprimir codigos de huffman generados
 
+function clearHuffmanCodes(){
+
+  const titleTextCompres= document.getElementById("compressedTitle");
+  titleTextCompres.innerText = '';
+
+  multilineString =  "<div></div>";
+  document.getElementById('compresedText').innerHTML = multilineString; 
+
+  const finalTextCompress = document.getElementById("finalTextTitle");
+    finalTextCompress.innerText = '';
+
+    const finalTex= document.getElementById("finalText");
+    finalTex.innerText = '';
+
+}
+
+function printPaths(node) {
+  var path = Array(1000).fill(0);
+  printPathsRecur(node, path, 0, '');
+}
+
+function printPathsRecur(node , path , pathLen, lastEdge) {
+  if (node == null)
+      return;
+
+  /* append this node to the path array */
+  path[pathLen] = lastEdge;
+  pathLen++;
+
+  /* it's a leaf, so print the path that lead to here */
+  if (node.left == null && node.right == null)
+      printArray(path, pathLen, node.key);
+  else {
+      /* otherwise try both subtrees */
+      printPathsRecur(node.left, path, pathLen,0);
+      printPathsRecur(node.right, path, pathLen,1);
+  }
+}
+
+function printArray(ints , len, val) {
+  var i;
+  var currentCode = '';
+  var onlyBits = '';
+
+  //document.write(val + ": ");
+  currentCode += val;
+  currentCode +=': ';
+
+  for (i = 0; i < len; i++) {
+      //document.write(ints[i] + " ");
+      currentCode += ints[i];
+      currentCode += ' ';
+
+      onlyBits += ints[i];
+  }
+
+  huuffmanMap.set(val, onlyBits);
+  huffmanCodes.push(currentCode);
+}
+//Fin de la impresion de los codigos de huffman
+
+
+// Variables Globales
 var cy;
 var st;
 var st2;
 var layout;
 var min_heap;
+var root;
+var huffmanCodes = [];
+var huuffmanMap = new Map();
+var origText;
+
 let options = {
   name: 'breadthfirst',
-
   fit: true, // whether to fit the viewport to the graph
   directed: true, // whether the tree is directed downwards (or edges can point in any direction if false)
   padding: 30, // padding on fit
@@ -143,7 +240,6 @@ let options = {
 
 // Fin de variables globales
 
-// Cosas Kevin
 
 function nextMove() {
   if(!st2.isEmpty()){
@@ -155,7 +251,6 @@ function nextMove() {
         st.push(restore_data[i].id());
       }
     }
-
     return;
   }
 
@@ -171,29 +266,62 @@ function nextMove() {
     min_heap.insert(current_node);
 
     cy.add({
-      data: { id: current_node.key + "/" + current_node.val }
+      data: { id: current_node.val + "/" + current_node.key}
     });
 
     cy.add({
       data: {
         id: current_node.key + current_node.left.key,
-        source: current_node.key + "/" + current_node.val,
-        target: current_node.left.key + "/" + current_node.left.val
+        source: current_node.val + "/" + current_node.key,
+        target: current_node.left.val + "/" + current_node.left.key,
+        label: '0'
       }
     });
     cy.add({
       data: {
         id: current_node.key + current_node.right.key,
-        source: current_node.key + "/" + current_node.val,
-        target: current_node.right.key + "/" + current_node.right.val
+        source: current_node.val + "/" + current_node.key,
+        target: current_node.right.val + "/" + current_node.right.key,
+        label: '1'
       }
     });
 
     layout.stop();
     layout = cy.layout(options);
-    st.push(current_node.key + "/" + current_node.val);
+    st.push(current_node.val + "/" + current_node.key);
     layout.run();
 
+  }else{
+
+    huffmanCodes = [];
+
+    root = min_heap.getMin();
+    printPaths(root);
+
+    const titleTextCompres= document.getElementById("compressedTitle");
+    titleTextCompres.innerText = 'Los codigos de huffman obtenidos son:';
+   // console.log(huffmanCodes);
+   console.log(huuffmanMap);
+
+   multilineString =  "<div><p>";
+    for(var i = 0; i< huffmanCodes.length; i++ ){
+      //console.log(huffmanCodes[i]);
+      multilineString += huffmanCodes[i];
+
+      multilineString += "<br/>";
+    
+    }
+  
+    multilineString += "</p></div>";
+    document.getElementById('compresedText').innerHTML = multilineString; 
+    
+    
+    //Imprimimos el texto ya comprimido
+    const finalTextCompress = document.getElementById("finalTextTitle");
+    finalTextCompress.innerText = 'El texto comprimido es:';
+
+    const finalTex= document.getElementById("finalText");
+    finalTex.innerText = getCommpresedText(origText);
   }
 }
 
@@ -205,12 +333,18 @@ function backMove(){
   }
 }
 
-// Fin cosas Kevin
+
 
 function generaArbol() {
 
+  //Limpieamos los codigos de huffman generqados previamente
+  huffmanCodes = [];
+  origText = '';
+  clearHuffmanCodes();
+
   const input = document.getElementById("texto");
   const texto = input.value;
+  origText = texto;
 
   var ocurrencias = new Map();
 
@@ -240,16 +374,6 @@ function generaArbol() {
   //Aqui declaramos nuestro espacio donde el grafo sera dibujado asi como las proiedades de estilo
   cy = cytoscape({
     container: document.getElementById('cy'),
-    /*elements: [
-      { data: { id: 'a' } },
-      { data: { id: 'b' } },
-      {
-        data: {
-          id: 'ab',
-          source: 'a',
-          target: 'b'
-        }
-      }],*/
     style: [
       {
         selector: 'node',
@@ -258,10 +382,21 @@ function generaArbol() {
           'text-valign': 'center',
           'text-halign': 'center'
         }
-      }]
+      },
+      {
+        selector: 'edge',
+        style: {
+          'curve-style': 'bezier',
+          'target-arrow-shape': 'triangle',
+          'label': 'data(label)'
+        }
+      }
+    ]
   });
 
-  // Cosas Kevin
+
+  ocurrencias = new Map([...ocurrencias.entries()].sort((a, b) => a[1] - b[1]));
+  console.log(ocurrencias);
 
   layout = cy.layout(options);
   st = new Stack();
@@ -276,8 +411,14 @@ function generaArbol() {
     min_heap.insert(aux_mode);
 
     cy.add({
-      data: { id: key + "/" + value }
+      data: { id: value + "/" + key }
     });
+
+    var currId = value + "/" + key;
+
+    //Le agregamos un color diferente a los nodos hoja
+    cy.nodes('[id = currId ]').style('background-color', '#02457A');
+    cy.nodes('[id = currId ]').style('color',"white");
 
     layout.stop();
     layout = cy.layout(options);
@@ -286,18 +427,30 @@ function generaArbol() {
 
   }
 
-  //Fin Cosas Kevin
+  //escribimos una reprentacion en bits de la palabra original 
+  const textoOrig = document.getElementById("originalText");
+  const titleTextOrig = document.getElementById("originalTextTitle");
 
-  /*
-  //Añadimos los nodos a nuestro grafo, los cuales seran igual a los n caracteres diferentes que se ingresen
-  for (let [key, value] of ocurrenciasOrdenadas) {
+  var originalbits = '';
+  var numChars = texto.length;
 
-    cy.add({
-      data: { id: key + "/" + value }
-    });
+  
+  for(var i = 1; i<= numChars*8; i++){
+
+    if(i%8 == 0){
+      originalbits += ' ';
+    }else{
+      //De momento generamos un numero rando entre 0 y 1
+      //Posteriormente se agregara el map que contendra que codigo n bits de assci corresponde a cada caracter
+      originalbits += Math.floor((Math.random() * (2-0))+0);
+    }
 
   }
-  */
+  
+  titleTextOrig.innerText = 'La representación de tu texto original en bits es:';
+  textoOrig.innerText = originalbits;
+
+
 
   //Se configura el layout como de tipo grid ya que esto permite que inicialmente todos los nodos
   //aparezcan en una sola linea horizontal
